@@ -1,0 +1,6 @@
+{
+  "name": "RegistroEventosCloud - Android App & Firebase Suite",
+  "description": "Aplicación Android completa en Kotlin y Jetpack Compose con sincronización en tiempo real con Cloud Firestore y Firebase Auth.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
