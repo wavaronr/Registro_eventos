@@ -8,8 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.wilmervaron.registroeventoscloud.core.common.Resource
+import com.wilmervaron.registroeventoscloud.data.repository.EventoRepositoryImpl
 import com.wilmervaron.registroeventoscloud.domain.model.EstadoEvento
 import com.wilmervaron.registroeventoscloud.domain.model.Evento
 import com.wilmervaron.registroeventoscloud.presentation.auth.login.LoginScreen
@@ -17,10 +20,12 @@ import com.wilmervaron.registroeventoscloud.presentation.auth.login.LoginUiState
 import com.wilmervaron.registroeventoscloud.presentation.eventos.create_edit.CreateEditEventoScreen
 import com.wilmervaron.registroeventoscloud.presentation.eventos.list.EventosListScreen
 import com.wilmervaron.registroeventoscloud.presentation.eventos.list.EventosUiState
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
     private val auth by lazy { FirebaseAuth.getInstance() }
+    private val eventoRepository by lazy { EventoRepositoryImpl() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,7 @@ class MainActivity : ComponentActivity() {
             var fechaEvento by remember { mutableStateOf("") }
             var estadoEvento by remember { mutableStateOf(EstadoEvento.PENDIENTE) }
             var eventoEnEdicionId by remember { mutableStateOf<String?>(null) }
+            var isSavingEvento by remember { mutableStateOf(false) }
 
             // Escuchar cambios de autenticación
             DisposableEffect(Unit) {
@@ -46,6 +52,26 @@ class MainActivity : ComponentActivity() {
                 }
                 auth.addAuthStateListener(listener)
                 onDispose { auth.removeAuthStateListener(listener) }
+            }
+
+            // Escuchar eventos en tiempo real desde Firestore cuando el usuario esté autenticado
+            LaunchedEffect(currentUser?.uid) {
+                val user = currentUser
+                if (user != null) {
+                    eventoRepository.getEventos(user.uid).collect { resource ->
+                        when (resource) {
+                            is Resource.Loading -> {
+                                eventosState = eventosState.copy(isLoading = true)
+                            }
+                            is Resource.Success -> {
+                                eventosState = eventosState.copy(eventos = resource.data, isLoading = false, errorMessage = null)
+                            }
+                            is Resource.Error -> {
+                                eventosState = eventosState.copy(isLoading = false, errorMessage = resource.message)
+                            }
+                        }
+                    }
+                }
             }
 
             MaterialTheme {
@@ -117,7 +143,9 @@ class MainActivity : ComponentActivity() {
                                         currentScreen = "edit_evento"
                                     },
                                     onDeleteEvento = { id ->
-                                        eventosState = eventosState.copy(eventos = eventosState.eventos.filter { it.id != id })
+                                        lifecycleScope.launch {
+                                            eventoRepository.deleteEvento(id)
+                                        }
                                     },
                                     onCreateClick = {
                                         eventoEnEdicionId = null
@@ -139,28 +167,31 @@ class MainActivity : ComponentActivity() {
                                     descripcion = descripcionEvento,
                                     fecha = fechaEvento,
                                     estado = estadoEvento,
-                                    isLoading = false,
+                                    isLoading = isSavingEvento,
                                     errorMessage = null,
                                     onTituloChange = { tituloEvento = it },
                                     onDescripcionChange = { descripcionEvento = it },
                                     onFechaChange = { fechaEvento = it },
                                     onEstadoChange = { estadoEvento = it },
                                     onGuardarClick = {
-                                        val nuevoEvento = Evento(
-                                            id = eventoEnEdicionId ?: System.currentTimeMillis().toString(),
-                                            titulo = tituloEvento,
-                                            descripcion = descripcionEvento,
-                                            fecha = fechaEvento,
-                                            estado = estadoEvento,
-                                            usuarioId = user.uid
-                                        )
-                                        val listaActualizada = if (eventoEnEdicionId != null) {
-                                            eventosState.eventos.map { if (it.id == eventoEnEdicionId) nuevoEvento else it }
-                                        } else {
-                                            eventosState.eventos + nuevoEvento
+                                        isSavingEvento = true
+                                        lifecycleScope.launch {
+                                            val nuevoEvento = Evento(
+                                                id = eventoEnEdicionId ?: "",
+                                                titulo = tituloEvento,
+                                                descripcion = descripcionEvento,
+                                                fecha = fechaEvento,
+                                                estado = estadoEvento,
+                                                usuarioId = user.uid
+                                            )
+                                            if (eventoEnEdicionId != null) {
+                                                eventoRepository.updateEvento(nuevoEvento)
+                                            } else {
+                                                eventoRepository.createEvento(nuevoEvento)
+                                            }
+                                            isSavingEvento = false
+                                            currentScreen = "home"
                                         }
-                                        eventosState = eventosState.copy(eventos = listaActualizada)
-                                        currentScreen = "home"
                                     },
                                     onBackClick = {
                                         currentScreen = "home"
