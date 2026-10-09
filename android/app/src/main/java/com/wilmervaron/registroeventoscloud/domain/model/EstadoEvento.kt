@@ -1,4 +1,4 @@
-package com.registro.eventoscloud.domain.model
+package com.wilmervaron.registroeventoscloud.domain.model
 
 /**
  * Estados del ciclo de vida de un evento en RegistroEventosCloud.

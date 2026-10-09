@@ -1,11 +1,11 @@
-package com.registro.eventoscloud.data.repository
+package com.wilmervaron.registroeventoscloud.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
-import com.registro.eventoscloud.core.common.Resource
-import com.registro.eventoscloud.domain.repository.AuthRepository
+import com.wilmervaron.registroeventoscloud.core.common.Resource
+import com.wilmervaron.registroeventoscloud.domain.repository.AuthRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

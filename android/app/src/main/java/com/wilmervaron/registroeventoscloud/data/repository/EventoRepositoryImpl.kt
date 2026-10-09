@@ -1,11 +1,11 @@
-package com.registro.eventoscloud.data.repository
+package com.wilmervaron.registroeventoscloud.data.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.registro.eventoscloud.core.common.Resource
-import com.registro.eventoscloud.data.model.EventoDto
-import com.registro.eventoscloud.domain.model.Evento
-import com.registro.eventoscloud.domain.repository.EventoRepository
+import com.wilmervaron.registroeventoscloud.core.common.Resource
+import com.wilmervaron.registroeventoscloud.data.model.EventoDto
+import com.wilmervaron.registroeventoscloud.domain.model.Evento
+import com.wilmervaron.registroeventoscloud.domain.repository.EventoRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

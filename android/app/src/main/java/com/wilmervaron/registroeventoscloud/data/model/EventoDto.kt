@@ -1,8 +1,8 @@
-package com.registro.eventoscloud.data.model
+package com.wilmervaron.registroeventoscloud.data.model
 
 import com.google.firebase.firestore.DocumentId
-import com.registro.eventoscloud.domain.model.EstadoEvento
-import com.registro.eventoscloud.domain.model.Evento
+import com.wilmervaron.registroeventoscloud.domain.model.EstadoEvento
+import com.wilmervaron.registroeventoscloud.domain.model.Evento
 
 /**
  * Data Transfer Object para Firestore.

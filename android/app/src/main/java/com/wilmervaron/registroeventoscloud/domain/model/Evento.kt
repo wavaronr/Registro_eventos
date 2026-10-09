@@ -1,4 +1,4 @@
-package com.registro.eventoscloud.domain.model
+package com.wilmervaron.registroeventoscloud.domain.model
 
 /**
  * Modelo de negocio que representa un evento en la aplicación.

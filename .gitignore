@@ -6,3 +6,20 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Android & Gradle
+.gradle/
+local.properties
+google-services.json
+android/app/google-services.json
+!google-services.json.example
+!android/app/google-services.json.example
+*.keystore
+*.jks
+*.p12
+app/build/
+android/app/build/
+android/.gradle/
+android/local.properties
+.idea/workspace.xml
+.idea/caches/

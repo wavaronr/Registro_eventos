@@ -1,4 +1,4 @@
-package com.registro.eventoscloud
+package com.wilmervaron.registroeventoscloud
 
 import android.app.Application
 import com.google.firebase.firestore.FirebaseFirestore
@@ -14,7 +14,7 @@ class RegistroEventosApp : Application() {
         val settings = FirebaseFirestoreSettings.Builder()
             .setLocalCacheSettings(
                 PersistentCacheSettings.newBuilder()
-                    .setSizeBytes(PersistentCacheSettings.CACHE_SIZE_UNLIMITED)
+                    .setSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
                     .build()
             )
             .build()

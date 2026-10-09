@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "310215089902",
+    "project_id": "registroeventoscloud",
+    "storage_bucket": "registroeventoscloud.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310215089902:android:ab8eb568ee84d57fdf5dff",
+        "android_client_info": {
+          "package_name": "com.wilmervaron.registroeventoscloud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "YOUR_FIREBASE_API_KEY_HERE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.registro.eventoscloud"
+    namespace = "com.wilmervaron.registroeventoscloud"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.registro.eventoscloud"
+        applicationId = "com.wilmervaron.registroeventoscloud"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

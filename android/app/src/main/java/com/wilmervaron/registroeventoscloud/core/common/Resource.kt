@@ -1,4 +1,4 @@
-package com.registro.eventoscloud.core.common
+package com.wilmervaron.registroeventoscloud.core.common
 
 /**
  * Clase sellada para encapsular los estados de operaciones asíncronas
