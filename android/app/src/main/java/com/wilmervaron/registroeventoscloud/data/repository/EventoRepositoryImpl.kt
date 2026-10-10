@@ -20,22 +20,20 @@ class EventoRepositoryImpl(
     override fun getEventos(usuarioId: String): Flow<Resource<List<Evento>>> = callbackFlow {
         trySend(Resource.Loading)
 
-        // Consulta filtrada por usuarioId y ordenada cronológicamente
-        // Firestore offline cache funciona automáticamente con snapshot listener
+        // Consulta filtrada por usuarioId (ordenamiento en memoria para evitar requerir índice compuesto en Firestore)
         val query = eventosCollection
             .whereEqualTo("usuarioId", usuarioId)
-            .orderBy("fechaCreacion", Query.Direction.DESCENDING)
 
         val listenerRegistration = query.addSnapshotListener { snapshot, error ->
             if (error != null) {
-                trySend(Resource.Error("Error al sincronizar eventos: ${error.localizedMessage}", error))
+                trySend(Resource.Error("Error de Firestore: ${error.localizedMessage}", error))
                 return@addSnapshotListener
             }
 
             if (snapshot != null) {
                 val eventos = snapshot.documents.mapNotNull { doc ->
                     doc.toObject(EventoDto::class.java)?.copy(id = doc.id)?.toDomain()
-                }
+                }.sortedByDescending { it.fechaCreacion }
                 trySend(Resource.Success(eventos))
             }
         }

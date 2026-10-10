@@ -184,13 +184,22 @@ class MainActivity : ComponentActivity() {
                                                 estado = estadoEvento,
                                                 usuarioId = user.uid
                                             )
-                                            if (eventoEnEdicionId != null) {
+                                            val result = if (eventoEnEdicionId != null) {
                                                 eventoRepository.updateEvento(nuevoEvento)
                                             } else {
                                                 eventoRepository.createEvento(nuevoEvento)
                                             }
                                             isSavingEvento = false
-                                            currentScreen = "home"
+                                            when (result) {
+                                                is Resource.Success -> {
+                                                    Toast.makeText(this@MainActivity, "¡Guardado exitosamente en Firestore!", Toast.LENGTH_SHORT).show()
+                                                    currentScreen = "home"
+                                                }
+                                                is Resource.Error -> {
+                                                    Toast.makeText(this@MainActivity, "Error en Firestore: ${result.message}", Toast.LENGTH_LONG).show()
+                                                }
+                                                is Resource.Loading -> {}
+                                            }
                                         }
                                     },
                                     onBackClick = {
