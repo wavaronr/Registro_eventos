@@ -49,6 +49,15 @@ android {
     }
 }
 
+tasks.withType<Test> {
+    testLogging {
+        events("passed", "skipped", "failed", "standardOut", "standardError")
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -73,6 +82,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+
+    // Pruebas unitarias
+    testImplementation(libs.junit)
 
     debugImplementation(libs.androidx.ui.tooling)
 }
